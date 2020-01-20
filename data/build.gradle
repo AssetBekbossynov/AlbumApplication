@@ -1,0 +1,50 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+android {
+    compileSdkVersion 29
+    buildToolsVersion "29.0.0"
+
+
+    defaultConfig {
+        minSdkVersion 19
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles 'consumer-rules.pro'
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    compileOnly 'javax.annotation:jsr250-api:1.0'
+    implementation 'javax.inject:javax.inject:1'
+    implementation 'androidx.annotation:annotation:1.0.1'
+
+    implementation project(':domain')
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${rootProject.versions.kotlin}"
+    implementation "org.koin:koin-android:${rootProject.versions.koin}"
+    implementation "io.reactivex.rxjava2:rxjava:${rootProject.versions.rxJava}"
+    implementation "io.reactivex.rxjava2:rxandroid:${rootProject.versions.rxAndroid}"
+    implementation 'com.squareup.okhttp3:okhttp:3.12.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.10.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.6.0'
+    implementation "com.squareup.retrofit2:converter-gson:2.6.0"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:2.6.0"
+    implementation 'com.google.code.gson:gson:2.8.5'
+
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test:runner:1.1.1-alpha01'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1-alpha01'
+}

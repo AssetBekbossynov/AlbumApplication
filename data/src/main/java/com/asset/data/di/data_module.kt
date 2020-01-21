@@ -1,7 +1,12 @@
 package com.asset.data.di
 
+import com.asset.data.BuildConfig
 import com.asset.data.exception.RxErrorHandlingCallAdapterFactory
+import com.asset.data.repository.AlbumDataRep
+import com.asset.data.repository.dataSource.CloudAlbumDataStore
+import com.asset.data.service.AlbumService
 import com.asset.data.util.Logger
+import com.asset.domain.repository.AlbumRep
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.dsl.module.module
@@ -15,13 +20,10 @@ import java.util.concurrent.TimeUnit
 val dataModule = module {
 
     single { createOkHttpClient() }
-    /**
-     * Provides AuthRepository from AuthService
-     */
-//    single { AuthDataRep(get(), get()) as AuthRep }
-//    single { createService<AuthService>(get(), Constants.urlAuth) }
-//    single { PrefsAuthDataStore(get()) as LocalAuthDataStore }
-//    factory { CloudAuthDataStore(get()) }
+
+    single { AlbumDataRep(get()) as AlbumRep }
+    single { createService<AlbumService>(get(), BuildConfig.API_ADDRESS) }
+    factory { CloudAlbumDataStore(get()) }
 
 }
 

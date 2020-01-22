@@ -18,7 +18,7 @@ android {
 
     buildTypes {
         debug {
-            buildConfigField "String", "API_ADDRESS", "http://jsonplaceholder.typicode.com/"
+            buildConfigField "String", "API_ADDRESS", '"http://jsonplaceholder.typicode.com/"'
         }
         release {
             minifyEnabled false

@@ -1,23 +1,21 @@
 package com.asset.albumapplication.ui.main
 
+import androidx.lifecycle.MutableLiveData
 import com.asset.domain.entity.AlbumDomain
 import com.asset.domain.interactor.GetAlbum
 import com.asset.domain.interactor.UseCase
-import io.reactivex.Observable
-import io.reactivex.internal.operators.observable.ObservableFromArray
 
 class AlbumListViewModel(val getAlbum: UseCase<List<AlbumDomain>, GetAlbum.Params>){
 
-    val albumList: Observable<List<AlbumDomain>>
+    var albumList = MutableLiveData<AlbumDomain>()
 
-    fun getAlbum() {
-        getAlbum.execute({
+    fun getAlbum(limit: Int, start: Int) {
+        getAlbum.execute(GetAlbum.Params.getAlbum(limit, start), {
             it.forEach {
-                albumList.add(it)
+                albumList.value = it
             }
         },{
 
         })
     }
-
 }

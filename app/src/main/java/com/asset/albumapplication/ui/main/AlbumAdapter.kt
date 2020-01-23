@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.asset.albumapplication.R
 import com.asset.albumapplication.helpers.ConstantsExtra
-import com.asset.albumapplication.ui.album.AlbumActivity
+import com.asset.albumapplication.ui.album.PhotoListActivity
 import com.asset.domain.entity.AlbumDomain
 import kotlinx.android.synthetic.main.album_item.view.*
 
@@ -31,7 +31,7 @@ class AlbumAdapter(private val context: Context, private val list: List<AlbumDom
         itemId = list[position].id
 
         holder.itemView.setOnClickListener {
-            val intent = Intent(context, AlbumActivity::class.java)
+            val intent = Intent(context, PhotoListActivity::class.java)
             intent.putExtra(ConstantsExtra.ALBUM_ID, list[position].id)
             context.startActivity(intent)
         }

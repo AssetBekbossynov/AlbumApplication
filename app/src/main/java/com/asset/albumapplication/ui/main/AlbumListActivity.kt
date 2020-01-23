@@ -2,18 +2,20 @@ package com.asset.albumapplication.ui.main
 
 import android.nfc.tech.MifareUltralight.PAGE_SIZE
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import android.view.View
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.asset.albumapplication.R
+import com.asset.albumapplication.ui.BaseActivity
+import com.asset.albumapplication.util.Status
 import com.asset.domain.entity.AlbumDomain
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
 
 
-class MainActivity : AppCompatActivity() {
+class AlbumListActivity : BaseActivity() {
 
     val viewModel: AlbumListViewModel by inject { parametersOf(this) }
 
@@ -25,15 +27,28 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        viewModel.getAlbum(20, albums.size)
-        isLoading = true
+        viewModel.getAlbum(start = albums.size)
 
         val adapter = AlbumAdapter(this, albums)
 
         viewModel.albumList.observe(this, Observer {
-            albums.add(it)
-            isLoading = false
-            adapter.notifyDataSetChanged()
+            when (it.status) {
+                Status.SUCCESS -> {
+                    it.data?.forEach { albums.add(it) }
+                    adapter.notifyDataSetChanged()
+                    isLoading = false
+                    hideLoading()
+                }
+                Status.ERROR -> {
+                    showErrorMessage(it.message)
+                    isLoading = false
+                    hideLoading()
+                }
+                Status.LOADING -> {
+                    isLoading = true
+                    showLoading()
+                }
+            }
         })
 
         rv.adapter = adapter
@@ -42,6 +57,14 @@ class MainActivity : AppCompatActivity() {
         val listener = ScrollListener(rv.layoutManager as LinearLayoutManager)
 
         rv.addOnScrollListener(listener)
+    }
+
+    fun showLoading(){
+        progress.visibility = View.VISIBLE
+    }
+
+    fun hideLoading(){
+        progress.visibility = View.GONE
     }
 
     inner class ScrollListener(val layoutManager: LinearLayoutManager): RecyclerView.OnScrollListener(){
@@ -56,7 +79,6 @@ class MainActivity : AppCompatActivity() {
                     firstVisibleItemPosition >= 0 && totalItemCount >= PAGE_SIZE) {
 
                     viewModel.getAlbum(visibleItemCount, totalItemCount)
-                    isLoading = true
                 }
             }
         }
